@@ -19,7 +19,9 @@ jobs:
             sudo apt-get install -y \
               libxext6 \
               libxrender1 \
-              libxtst6
+              libxtst6 \
+              libxi6
+
 
       - run:
           name: Run Maven tests
