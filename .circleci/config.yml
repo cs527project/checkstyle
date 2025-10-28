@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   run-tests:
     docker:
-      - image: cimg/openjdk:21.0.6
+      - image: cimg/openjdk:21.0.6-browsers
     steps:
       - checkout
 
@@ -12,15 +12,8 @@ jobs:
           keys:
             - mvn-cache-{{ checksum "pom.xml" }}
 
-      - run:
-          name: Install X11 libs for GUI tests
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y \
-              libxext6 \
-              libxrender1 \
-              libxtst6 \
-              libxi6
+      # We removed apt-get and manual X11 lib install because the -browsers image
+      # already includes the GUI/X11 dependencies needed for Swing/AWT tests.
 
       - run:
           name: Run Maven tests (skip CommitValidationTest)
