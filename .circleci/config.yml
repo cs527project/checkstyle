@@ -13,26 +13,18 @@ jobs:
             - mvn-cache-{{ checksum "pom.xml" }}
 
       - run:
+          name: Install X11 libs for GUI tests
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y \
+              libxext6 \
+              libxrender1 \
+              libxtst6
+
+      - run:
           name: Run Maven tests
           command: |
             ./mvnw -B test
-
-      - run:
-          name: Collect JUnit XML results
-          command: |
-            mkdir -p ~/test-results/junit
-            # copy Surefire/Failsafe reports from all modules into ~/test-results/junit
-            find . -type f \( -path "*/target/surefire-reports/*.xml" -o -path "*/target/failsafe-reports/*.xml" \) -exec cp {} ~/test-results/junit/ \;
-
-      - store_test_results:
-          path: ~/test-results
-
-      - save_cache:
-          name: Save Maven repo and wrapper cache
-          key: mvn-cache-{{ checksum "pom.xml" }}
-          paths:
-            - .m2
-            - .mvn/wrapper
 
 workflows:
   test:
